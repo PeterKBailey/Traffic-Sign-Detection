@@ -2,6 +2,10 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_pytorch/flutter_pytorch.dart';
 import 'package:flutter_pytorch/pigeon.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+// Widget?
+import 'package:flutter/material.dart';
 
 
 
@@ -22,12 +26,14 @@ class ImageProcessor {
   }
 
   // run an image model
-  Future<List<dynamic>?> run(File image) async {
+  Future<Widget> run(File image) async {
+    print("THIS IS THE THING RUNNING HERE *****************************");
     // get prediction
-    List<ResultObjectDetection?> objDetect = await _model.getImagePrediction(await image.readAsBytes(),
-        minimumScore: 0.1, IOUThershold: 0.3);
-
-    print("Forward pass...");
-    return objDetect;
+    List<ResultObjectDetection?> objDetect = await _model.getImagePrediction(
+      image.readAsBytesSync(),
+      minimumScore: 0.1, IOUThershold: 0.3
+    );
+    Widget newImage = _model.renderBoxesOnImage(image, objDetect);
+    return newImage;
   }
 }

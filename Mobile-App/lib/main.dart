@@ -1,8 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:live_traffic_sign_classification/camera.dart';
 import 'package:live_traffic_sign_classification/image_processor.dart';
+
+
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,18 +45,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // final Camera _camera = ;
+  Camera? _camera;
   List<dynamic>? _prediction;
+  Widget picture = Container();
+  void pictureTaken(File newPicture){
+    setState((){
+      // getImageFileFromAssets("processing/zidane.jpg").then((newPicture){
+        // picture = newPicture;
+        ImageProcessor.create("assets/processing/yolov5s.torchscript").then((processor) {
+          processor.run(newPicture).then((prediction) {
+            print("THIS IS HAPPENING");
+            picture = prediction;
+            setState(() {});
+          });
+        });
+      // });
+    });
+  }
+
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('assets/$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.create(recursive: true);
+    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
+  }
+
 
   _MyHomePageState(){
+    _camera = Camera(callback: pictureTaken);
     print("HALELLOO????");
-    ImageProcessor.create("assets/processing/yolov5s.torchscript").then((processor) {
-      processor.run(File("assets/processing/zidane.jpg")).then((prediction) {
-        print("THIS IS HAPPENING");
-        _prediction = prediction;
-        setState(() {});
-      });
-    });
   }
 
   // This method is rerun every time setState is called, for instance as done
@@ -78,12 +103,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               margin: const EdgeInsets.all(10.0),
-              height: MediaQuery.of(context).size.height / 3,
-              child: const Camera()
+              height: MediaQuery.of(context).size.height / 2,
+              child: _camera
             ),
-            Text(
-              'The prediction is: $_prediction',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Container(
+              margin: const EdgeInsets.all(10.0),
+              height: MediaQuery.of(context).size.height / 3,
+              child: picture
             ),
           ],
         ),

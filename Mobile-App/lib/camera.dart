@@ -1,8 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class Camera extends StatefulWidget{
-  const Camera({super.key});
+  final Function(File) callback;
+
+  const Camera({super.key, required this.callback});
 
   @override
   State<Camera> createState() {
@@ -22,7 +25,7 @@ class _CameraState extends State<Camera> {
   Future<void> initCamera() async {
     List<CameraDescription> cameras = await availableCameras();
 
-    controller = CameraController(cameras[1], ResolutionPreset.max);
+    controller = CameraController(cameras[0], ResolutionPreset.high);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -54,6 +57,46 @@ class _CameraState extends State<Camera> {
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return CameraPreview(controller);
+    return
+      Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 3,
+            child: ClipRect(
+              child: OverflowBox(
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Container(
+                    width: MediaQuery.of(context).size.height / 3,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: CameraPreview(controller), // this is my CameraPreview
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Expanded(child: CameraPreview(controller)),
+          ElevatedButton(
+            // Provide an onPressed callback.
+            onPressed: () async {
+              // Take the Picture in a try / catch block. If anything goes wrong,
+              // catch the error.
+              try {
+                // Attempt to take a picture and then get the location
+                // where the image file is saved.
+                final image = await controller.takePicture();
+
+                widget.callback(File(image.path));
+              } catch (e) {
+                // If an error occurs, log the error to the console.
+                print(e);
+              }
+            },
+            child: const Icon(Icons.camera_alt),
+          )
+      ]
+    );
   }
 }
