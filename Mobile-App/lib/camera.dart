@@ -14,7 +14,8 @@ class Camera extends StatefulWidget{
 }
 
 class _CameraState extends State<Camera> {
-  late CameraController controller;
+  CameraController? controller;
+  bool isAccessDenied = false;
 
   @override
   void initState() {
@@ -25,72 +26,90 @@ class _CameraState extends State<Camera> {
   Future<void> initCamera() async {
     List<CameraDescription> cameras = await availableCameras();
 
-    controller = CameraController(cameras[0], ResolutionPreset.high);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
+    final cameraController = CameraController(cameras[0], ResolutionPreset.max);
+    // these now reference same object
+    controller = cameraController;
+
+    // update ui when controller changes
+    cameraController.addListener(() {
+      if (mounted) {
+        setState(() {});
       }
-      // rebuild
+    });
+
+    try{
+      await cameraController.initialize();
       setState(() {});
-    }).catchError((Object e) {
+    }
+    catch(e) {
       if (e is CameraException) {
         switch (e.code) {
           case 'CameraAccessDenied':
-          // Handle access errors here.
+            setState(() {
+              isAccessDenied = true;
+            });
             break;
           default:
           // Handle other errors here.
             break;
         }
       }
-    });
+    }
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!controller.value.isInitialized) {
+    final CameraController? cameraController = controller;
+
+    if (cameraController == null || !cameraController.value.isInitialized) {
       return Container();
     }
+    else if (isAccessDenied){
+      return const Text("Please go to settings and allow camera access.");
+    }
+
     return
       Column(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.height / 3,
-            height: MediaQuery.of(context).size.height / 3,
-            child: ClipRect(
-              child: OverflowBox(
-                alignment: Alignment.center,
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Container(
-                    width: MediaQuery.of(context).size.height / 3,
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: CameraPreview(controller), // this is my CameraPreview
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Container(
+          //   width: MediaQuery.of(context).size.height / 3,
+          //   height: MediaQuery.of(context).size.height / 3,
+          //   child: ClipRect(
+          //     child: OverflowBox(
+          //       alignment: Alignment.center,
+          //       child: FittedBox(
+          //         fit: BoxFit.fitWidth,
+          //         child: Container(
+          //           width: MediaQuery.of(context).size.height / 3,
+          //           height: MediaQuery.of(context).size.height / 3,
+          //           child: CameraPreview(controller),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          Expanded(child: CameraPreview(cameraController)),
           // Expanded(child: CameraPreview(controller)),
           ElevatedButton(
-            // Provide an onPressed callback.
             onPressed: () async {
-              // Take the Picture in a try / catch block. If anything goes wrong,
-              // catch the error.
               try {
-                // Attempt to take a picture and then get the location
-                // where the image file is saved.
-                final image = await controller.takePicture();
-
+                // take picture and run callback on it
+                // lock focus and exposure
+                await cameraController.setFocusMode(FocusMode.locked);
+                await cameraController.setExposureMode(ExposureMode.locked);
+                final image = await cameraController.takePicture();
                 widget.callback(File(image.path));
+                // unlock
+                await cameraController.setFocusMode(FocusMode.auto);
+                await cameraController.setExposureMode(ExposureMode.auto);
+
               } catch (e) {
-                // If an error occurs, log the error to the console.
                 print(e);
               }
             },

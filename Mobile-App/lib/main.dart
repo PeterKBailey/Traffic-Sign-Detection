@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -45,20 +46,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Camera? _camera;
+  late Camera _camera;
+  ImageProcessor? _processor;
   List<dynamic>? _prediction;
   Widget picture = Container();
+
   void pictureTaken(File newPicture){
     setState((){
       // getImageFileFromAssets("processing/zidane.jpg").then((newPicture){
-        // picture = newPicture;
-        ImageProcessor.create("assets/processing/yolov5s.torchscript").then((processor) {
-          processor.run(newPicture).then((prediction) {
+          _processor?.run(newPicture).then((prediction) {
             print("THIS IS HAPPENING");
             picture = prediction;
             setState(() {});
           });
-        });
       // });
     });
   }
@@ -76,7 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _MyHomePageState(){
     _camera = Camera(callback: pictureTaken);
-    print("HALELLOO????");
+    ImageProcessor.create("assets/processing/yolov5s.torchscript").then((processor) => {
+      setState((){
+        _processor = processor;
+      })
+    });
   }
 
   // This method is rerun every time setState is called, for instance as done
@@ -98,17 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Camera:',
-            ),
-            Container(
-              margin: const EdgeInsets.all(10.0),
-              height: MediaQuery.of(context).size.height / 2,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 3/7,
+              width: MediaQuery.of(context).size.width/2,
               child: _camera
             ),
-            Container(
-              margin: const EdgeInsets.all(10.0),
-              height: MediaQuery.of(context).size.height / 3,
+            SizedBox(
+              // margin: const EdgeInsets.all(10.0),
+              height: MediaQuery.of(context).size.height * 2/5,
+              width: MediaQuery.of(context).size.width/2,
+              // width: (MediaQuery.of(context).size.height * 2/5) * 9/16,
               child: picture
             ),
           ],

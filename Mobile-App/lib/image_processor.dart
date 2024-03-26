@@ -27,13 +27,19 @@ class ImageProcessor {
 
   // run an image model
   Future<Widget> run(File image) async {
+    // return Image(image: FileImage(image));
+
     print("THIS IS THE THING RUNNING HERE *****************************");
+    Stopwatch stopwatch = Stopwatch()..start();
+
     // get prediction
     List<ResultObjectDetection?> objDetect = await _model.getImagePrediction(
       image.readAsBytesSync(),
       minimumScore: 0.1, IOUThershold: 0.3
     );
     Widget newImage = _model.renderBoxesOnImage(image, objDetect);
+    print('processing executed in ${stopwatch.elapsed.inMilliseconds} miliseconds');
+
     return newImage;
   }
 }
