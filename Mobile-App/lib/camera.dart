@@ -77,24 +77,24 @@ class _CameraState extends State<Camera> {
     return
       Column(
         children: [
-          // Container(
-          //   width: MediaQuery.of(context).size.height / 3,
-          //   height: MediaQuery.of(context).size.height / 3,
-          //   child: ClipRect(
-          //     child: OverflowBox(
-          //       alignment: Alignment.center,
-          //       child: FittedBox(
-          //         fit: BoxFit.fitWidth,
-          //         child: Container(
-          //           width: MediaQuery.of(context).size.height / 3,
-          //           height: MediaQuery.of(context).size.height / 3,
-          //           child: CameraPreview(controller),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Expanded(child: CameraPreview(cameraController)),
+          Container(
+            width: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 3,
+            child: ClipRect(
+              child: OverflowBox(
+                alignment: Alignment.center,
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Container(
+                    width: MediaQuery.of(context).size.height / 3,
+                    height: MediaQuery.of(context).size.height / 3,
+                    child: CameraPreview(cameraController),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Expanded(child: CameraPreview(cameraController)),
           // Expanded(child: CameraPreview(controller)),
           ElevatedButton(
             onPressed: () async {

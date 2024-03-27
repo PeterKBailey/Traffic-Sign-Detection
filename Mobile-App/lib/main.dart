@@ -102,17 +102,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 3/7,
-              width: MediaQuery.of(context).size.width/2,
-              child: _camera
-            ),
-            SizedBox(
-              // margin: const EdgeInsets.all(10.0),
-              height: MediaQuery.of(context).size.height * 2/5,
-              width: MediaQuery.of(context).size.width/2,
-              // width: (MediaQuery.of(context).size.height * 2/5) * 9/16,
-              child: picture
+            _camera,
+            Container(
+              width: MediaQuery.of(context).size.height / 3,
+              height: MediaQuery.of(context).size.height / 3,
+              child: ClipRect(
+                child: OverflowBox(
+                  alignment: Alignment.center,
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Container(
+                      width: MediaQuery.of(context).size.height / 3,
+                      height: MediaQuery.of(context).size.height / 3,
+                      child: picture,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

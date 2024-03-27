@@ -34,11 +34,11 @@ def visualize_gt(image_key, anno, color='green', alpha=125, font=None):
             else:
                 color_tuple[-1] = alpha
 
-            rects_draw.rectangle((x1+1, y1+1, x2-1, y2-1), fill=color_tuple)
+            rects_draw.rectangle((x1, y1, x2, y2), fill=color_tuple)
             img_draw.line(((x1, y1), (x2, y1), (x2, y2), (x1, y2), (x1, y1)), fill='black', width=1)
 
             class_name = obj['label']
-            img_draw.text((x1 + 5, y1 + 5), class_name, font=font)
+            # img_draw.text((x1 + 5, y1 + 5), class_name, font=font)
 
         img = Image.alpha_composite(img, rects)
 
@@ -46,7 +46,7 @@ def visualize_gt(image_key, anno, color='green', alpha=125, font=None):
 
 
 if __name__ == '__main__':
-    image_key = 'f82itz69069z_LC7xM6UIA'
+    image_key = 'qFE6kyyxNTEuVJR1uHha4B'
 
     # load the annotation json
     anno = load_annotation(image_key)
