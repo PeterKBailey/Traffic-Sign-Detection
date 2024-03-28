@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -53,13 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void pictureTaken(File newPicture){
     setState((){
-      // getImageFileFromAssets("processing/zidane.jpg").then((newPicture){
+      getImageFileFromAssets("processing/zidane.jpg").then((newPicture){
           _processor?.run(newPicture).then((prediction) {
             print("THIS IS HAPPENING");
             picture = prediction;
             setState(() {});
           });
-      // });
+      });
     });
   }
 
@@ -76,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _MyHomePageState(){
     _camera = Camera(callback: pictureTaken);
-    ImageProcessor.create("assets/processing/yolov5s.torchscript").then((processor) => {
+    ImageProcessor.create("assets/processing/best.torchscript").then((processor) => {
       setState((){
         _processor = processor;
       })
@@ -103,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _camera,
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.height / 3,
               height: MediaQuery.of(context).size.height / 3,
               child: ClipRect(
@@ -111,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   alignment: Alignment.center,
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
-                    child: Container(
+                    child: SizedBox(
                       width: MediaQuery.of(context).size.height / 3,
                       height: MediaQuery.of(context).size.height / 3,
                       child: picture,

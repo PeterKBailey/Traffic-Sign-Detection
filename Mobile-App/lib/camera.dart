@@ -77,7 +77,7 @@ class _CameraState extends State<Camera> {
     return
       Column(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.height / 3,
             height: MediaQuery.of(context).size.height / 3,
             child: ClipRect(
@@ -85,7 +85,7 @@ class _CameraState extends State<Camera> {
                 alignment: Alignment.center,
                 child: FittedBox(
                   fit: BoxFit.fitWidth,
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.height / 3,
                     height: MediaQuery.of(context).size.height / 3,
                     child: CameraPreview(cameraController),
