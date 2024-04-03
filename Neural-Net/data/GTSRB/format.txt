@@ -1,0 +1,10 @@
+File Structure:
+
+GTSRB
+-- "test-data"
+---- All of the test ppm files
+---- "GT-final_test.csv"
+-- "train-data"
+---- Images
+------ #####
+-------- ppm files
