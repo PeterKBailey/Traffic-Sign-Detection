@@ -49,7 +49,7 @@ class AlexNet(nn.Module):
         return F.log_softmax(x, dim=1)
     
 class LeNet(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=43):
         super(LeNet, self).__init__()
         self.pool = nn.AvgPool2d(kernel_size=2, stride=2) 
 
