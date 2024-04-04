@@ -208,7 +208,7 @@ class _CameraState extends State<Camera> {
             // map category to colour
             Color boxColour = Colors.primaries[
               (0 +
-                  (Colors.primaries.length - 0)/(_numClasses-1 - 0)
+                  (Colors.primaries.length-1 - 0)/(_numClasses-1 - 0)
                       *(re.classIndex)
               ).round()
             ];
