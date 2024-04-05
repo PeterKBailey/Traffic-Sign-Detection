@@ -37,7 +37,6 @@ dependencies:
   camera: ^0.10.5+9
   flutter_pytorch: ^1.0.1
   image: ^4.1.7
-  convert_native_img_stream: ^0.0.1
   screenshot: ^2.3.0
   gal: ^2.3.0
 

@@ -18,15 +18,11 @@ There are a few key components to the project
 │  
 ├── train/  
 │   ├── images/  
-│   │   └── [series_of_jpgs]  
-│   └── annotations/  
-│       └── [series_of_jsons]  
+│       └── [series_of_jpgs]  
 │  
 ├── validate/  
 │   ├── images/  
-│   │   └── [series_of_jpgs]  
-│   └── annotations/   
-│       └── [series_of_jsons]  
+│       └── [series_of_jpgs]  
 │  
 └── mtsd_v2_fully_annotated/  
     ├── annotations/  
