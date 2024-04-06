@@ -50,3 +50,43 @@ Note that the yaml file can be 5n, 5s, 5m and so on.
 
 7. Now generate the torchscript file  
 `python yolov5/export.py --weights yolov5/runs/train/expXYZ/weights/best.pt --include torchscript --img 640 --optimize`
+
+## Training GTSRB
+
+TODO THE READMEN PORTION
+
+## Running Android App
+The android app allows for detection and classification in real time while also providing the ability to take snapshots and view them.
+
+### Requirements
+- Android studio
+- An Android phone with developer settings and USB debugging enabled
+
+### Building and Running Project
+1. Install android studio: https://developer.android.com/studio/install
+2. Install flutter: https://docs.flutter.dev/get-started/editor?tab=androidstudio
+3. Open the project
+4. Plug developer enabled Android phone into PC
+5. Main can be found in the `lib` directory
+6. Hit the green arrow from main or the top right
+7. Your editor should now look like so:
+
+![alt text](Readme-Images/image-1.png)
+
+### How to Use
+There are a few pieces to the app
+### Detection Screen
+* You will see a camera preview, this is the image stream on which the categorization/detection occurs
+* The camera button on the bottom center takes a snapshot of the image + label(s) which are viewable in the gallery
+* the circular button on the bottom right changes between categorization and identification mode
+* Prediction happens automatically, the label will appear on the top for categorization or will display a bounding box for localization
+
+![alt text](Readme-Images/image-5.png) ![alt text](Readme-Images/image-6.png)
+
+### Gallery Screen
+* Clicking Gallery on the bottom navigator will show you the snapshots you have taken thus far
+* You can tap on one to view it
+* This image is mobile, feel free to scale, translate, and rotate it as you like!
+* Hit your phone's back button / gesture to return to the gallery
+
+![alt text](Readme-Images/image-2.png) ![alt text](Readme-Images/image-3.png) ![alt text](Readme-Images/image-4.png)
