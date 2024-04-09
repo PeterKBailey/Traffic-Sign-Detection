@@ -10,8 +10,43 @@ There are a few key components to the project
 2. The YOLOv5 training neural network
 3. The Flutter mobile app
 
+# How To Run
+
+## GTSRB Classification Sample Script
+
+## Android Application
+Requires either
+- A) An Android phone which can install [the app APK](https://drive.google.com/file/d/1MHEOfz43j-FumzRXSGm3AV8wUzSVJSUp/view?usp=sharing)
+  1. Download the APK
+  2. Install it
+  3. Open the application (the prediction models are already included)
+
+- B) An emulated Android phone (Can be obtained through android studio go to Device Manager then click "Create device")
+  - In this case, follow the build steps decribed in [the section below](#building-android-app)
+  - This is not ideal as the purpose is to use the device camera
+
+### How to Use
+There are a few pieces to the app
+### Detection Screen
+* You will see a camera preview, this is the image stream on which the categorization/detection occurs
+* The camera button on the bottom center takes a snapshot of the image + label(s) which are viewable in the gallery
+* the circular button on the bottom right changes between categorization and identification mode
+* Prediction happens automatically, the label will appear on the top for categorization or will display a bounding box for localization
+
+![alt text](Readme-Images/image-5.png) ![alt text](Readme-Images/image-6.png)
+
+### Gallery Screen
+* Clicking Gallery on the bottom navigator will show you the snapshots you have taken thus far
+* You can tap on one to view it
+* This image is mobile, feel free to scale, translate, and rotate it as you like!
+* Hit your phone's back button / gesture to return to the gallery
+
+![alt text](Readme-Images/image-2.png) ![alt text](Readme-Images/image-3.png) ![alt text](Readme-Images/image-4.png)
+
+# Everything Below is Training and Building
+
 ## Training YOLOv5
-1. download the mapillary training and validation datasets from https://www.mapillary.com/dataset/trafficsign
+1. download the mapillary training and validation datasets from https://www.mapillary.com/dataset/trafficsign  
 ![alt text](image.png)
 2. Unzip the files and create the following directory structure:  
 ```main_directory/  
@@ -55,7 +90,7 @@ Note that the yaml file can be 5n, 5s, 5m and so on.
 
 TODO THE READMEN PORTION
 
-## Running Android App
+## Building Android App
 The android app allows for detection and classification in real time while also providing the ability to take snapshots and view them.
 
 ### Requirements
@@ -72,21 +107,3 @@ The android app allows for detection and classification in real time while also 
 7. Your editor should now look like so:
 
 ![alt text](Readme-Images/image-1.png)
-
-### How to Use
-There are a few pieces to the app
-### Detection Screen
-* You will see a camera preview, this is the image stream on which the categorization/detection occurs
-* The camera button on the bottom center takes a snapshot of the image + label(s) which are viewable in the gallery
-* the circular button on the bottom right changes between categorization and identification mode
-* Prediction happens automatically, the label will appear on the top for categorization or will display a bounding box for localization
-
-![alt text](Readme-Images/image-5.png) ![alt text](Readme-Images/image-6.png)
-
-### Gallery Screen
-* Clicking Gallery on the bottom navigator will show you the snapshots you have taken thus far
-* You can tap on one to view it
-* This image is mobile, feel free to scale, translate, and rotate it as you like!
-* Hit your phone's back button / gesture to return to the gallery
-
-![alt text](Readme-Images/image-2.png) ![alt text](Readme-Images/image-3.png) ![alt text](Readme-Images/image-4.png)
