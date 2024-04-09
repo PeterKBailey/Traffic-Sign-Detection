@@ -9,9 +9,10 @@ from net import VGNet
 
 def imshow(img, labels):
     npimg = img.numpy()
-    
+
     plt.figure(figsize=(15, 5))
-    plt.title(labels)
+    plt.text(0, 50, "Predicted: " + labels[0], fontsize=12)
+    plt.text(0, 60, "Actual: " + labels[1], fontsize=12)
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.show()
 
@@ -45,11 +46,12 @@ def main():
     net.load_state_dict(torch.load('models/model_scripted.pt',map_location="cpu"))
     net.eval()
 
-    images, _ = next(dataiter)
+    images, labels = next(dataiter)
     outputs = net(images)
     _, predicted = torch.max(outputs.data, 1)
+    predicted_labels = ',  '.join('%5s' % classes[predicted[j]] for j in range(samples))
     labels = ',  '.join('%5s' % classes[predicted[j]] for j in range(samples))
-    imshow(torchvision.utils.make_grid(images), labels)
+    imshow(torchvision.utils.make_grid(images), (predicted_labels, labels))
 
 if __name__ == "__main__":
     main()
