@@ -73,8 +73,8 @@ def preProcessData():
         transforms.ToTensor(),
     ])
     
-    train_data = datasets.GTSRB(root="data2", split="train", download=True, transform=transform)
-    test_data = datasets.GTSRB(root="data2", split="test", download=True, transform=transform)
+    train_data = datasets.GTSRB(root="data", split="train", download=True, transform=transform)
+    test_data = datasets.GTSRB(root="data", split="test", download=True, transform=transform)
     
     train_dataset = processDataset(train_data)
     test_dataset = processDataset(test_data)
@@ -115,7 +115,7 @@ def test(net, test_dataloader):
     return test_accuracy
 
 def learn(train_dataloader, test_dataloader, learning_rate=0.001, momentum=0.9, dropout=0.75):
-    net = LeNet(NUM_CLASSES, dropout)
+    net = VGNet(NUM_CLASSES, dropout)
     net = net.to(device)
     optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=momentum)
     accuracy_list = []

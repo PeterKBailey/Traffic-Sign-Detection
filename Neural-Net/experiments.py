@@ -21,53 +21,53 @@ def plotAccuracies(accuracies, labels):
 def runExperiments(train_dataset, test_dataset):
     #Hyper params
     batch_sizes = [16, 32, 64]
-    learning_rates = [0.0001, 0.001, 0.01, 0.1]
+    learning_rates = [0.0001, 0.001, 0.01]
     momentums = [0.5, 0.75, 0.9, 1]
     dropouts = [0, 0.1, 0.25, 0.5, 0.75]
     
-    # # Test batch sizes
-    # print("\nTesting batch sizes...")
-    # accuracies = []
-    # labels = []
-    # for _, value in enumerate(batch_sizes):
-    #     print(f'Batch-size: {value}')
-    #     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=value, shuffle=True)
-    #     test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
-    #     _, acc = learn(train_dataloader, test_dataloader)
-    #     accuracies+= acc
-    #     labels.append(f'Batch size: {value}')
+    # Test batch sizes
+    print("\nTesting batch sizes...")
+    accuracies = []
+    labels = []
+    for _, value in enumerate(batch_sizes):
+        print(f'Batch-size: {value}')
+        train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=value, shuffle=True)
+        test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
+        _, acc = learn(train_dataloader, test_dataloader)
+        accuracies+= acc
+        labels.append(f'Batch size: {value}')
 
-    # plt.title('GTSRB Batch Sizes')
-    # plotAccuracies(accuracies, labels)
+    plt.title('GTSRB Batch Sizes')
+    plotAccuracies(accuracies, labels)
 
     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
 
-    # # Test learning rates
-    # print("\nTesting learning rates...")
-    # accuracies = []
-    # labels = []
-    # for _, value in enumerate(learning_rates):
-    #     print(f'LR: {value}')
-    #     _, acc = learn(train_dataloader, test_dataloader, learning_rate=value)
-    #     accuracies+= acc
-    #     labels.append(f'LR: {value}')
+    # Test learning rates
+    print("\nTesting learning rates...")
+    accuracies = []
+    labels = []
+    for _, value in enumerate(learning_rates):
+        print(f'LR: {value}')
+        _, acc = learn(train_dataloader, test_dataloader, learning_rate=value)
+        accuracies+= acc
+        labels.append(f'LR: {value}')
 
-    # plt.title('GTSRB Learning Rates')
-    # plotAccuracies(accuracies, labels)
+    plt.title('GTSRB Learning Rates')
+    plotAccuracies(accuracies, labels)
 
-    # # Test momentums
-    # print("\nTesting momentum...")
-    # accuracies = []
-    # labels = []
-    # for _, value in enumerate(momentums):
-    #     print(f'Momentum: {value}')
-    #     _, acc = learn(train_dataloader, test_dataloader, momentum=value)
-    #     accuracies+= acc
-    #     labels.append(f'Momentum: {value}')
+    # Test momentums
+    print("\nTesting momentum...")
+    accuracies = []
+    labels = []
+    for _, value in enumerate(momentums):
+        print(f'Momentum: {value}')
+        _, acc = learn(train_dataloader, test_dataloader, momentum=value)
+        accuracies+= acc
+        labels.append(f'Momentum: {value}')
 
-    # plt.title('GTSRB Momentum')
-    # plotAccuracies(accuracies, labels)
+    plt.title('GTSRB Momentum')
+    plotAccuracies(accuracies, labels)
 
     # Test dropouts
     print("\nTesting dropouts...")
