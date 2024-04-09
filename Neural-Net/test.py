@@ -50,7 +50,7 @@ def main():
     outputs = net(images)
     _, predicted = torch.max(outputs.data, 1)
     predicted_labels = ',  '.join('%5s' % classes[predicted[j]] for j in range(samples))
-    labels = ',  '.join('%5s' % classes[predicted[j]] for j in range(samples))
+    labels = ',  '.join('%5s' % classes[labels[j]] for j in range(samples))
     imshow(torchvision.utils.make_grid(images), (predicted_labels, labels))
 
 if __name__ == "__main__":

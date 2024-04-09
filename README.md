@@ -14,6 +14,19 @@ There are a few key components to the project
 
 ## GTSRB Classification Sample Script
 
+## Neural Net
+There are three main python scripts that were involved with the training and evaluating of our models. The 'main.py' file is where the model is created with the provided hyper parameter and neural network class. The 'experiments.py' file tests the different hyperparameters and plots a graph of the results. The 'test.py' file executes our demo script where the output of our model is evaluated on a sample of the test dataset.
+
+### Neural Network Execution
+The 'test.py' is a demo of our best trained model's output. 
+
+### How to Run
+1. Navigate to Neural-Net/
+2. Install mandatory packages using  ```pip install -r requirements.txt```
+2. Execute the script with the command ```python test.py```
+
+This will display a figure of some sample test images, with the appropriate label determined by the model, and the ground truth label
+
 ## Android Application
 The android app allows for detection and classification in real time while also providing the ability to take snapshots and view them.
 
