@@ -1,0 +1,8 @@
+numpy==1.25.2
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==2.1.1+cpu
+albumentations==1.4.2
+matplotlib==3.8.4
+pandas==2.1.0
+pillow==10.2.0
+torchvision==0.17.2

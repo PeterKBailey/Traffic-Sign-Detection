@@ -21,7 +21,7 @@ Requires either
   2. Install it
   3. Open the application (the prediction models are already included)
 
-- B) An emulated Android phone (Can be obtained through android studio go to Device Manager then click "Create device")
+- B) An emulated Android phone (Can be obtained through Android Studio go to Device Manager then click "Create device")
   - In this case, follow the build steps decribed in [the section below](#building-android-app)
   - This is not ideal as the purpose is to use the device camera
 
@@ -43,7 +43,7 @@ There are a few pieces to the app
 
 ![alt text](Readme-Images/image-2.png) ![alt text](Readme-Images/image-3.png) ![alt text](Readme-Images/image-4.png)
 
-# Everything Below is Training and Building
+# Everything Below is Training/Building From Scratch
 
 ## Training YOLOv5
 1. download the mapillary training and validation datasets from https://www.mapillary.com/dataset/trafficsign  
@@ -101,7 +101,7 @@ The android app allows for detection and classification in real time while also 
 1. Install android studio: https://developer.android.com/studio/install
 2. Install flutter: https://docs.flutter.dev/get-started/editor?tab=androidstudio
 3. Open the project
-4. Plug developer enabled Android phone into PC
+4. Plug developer enabled (with USB-debugging) Android phone into PC
 5. Main can be found in the `lib` directory
 6. Hit the green arrow from main or the top right
 7. Your editor should now look like so:
