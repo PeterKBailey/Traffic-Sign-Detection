@@ -8,13 +8,16 @@ from PIL import Image
 import numpy as np
 from net import LeNet, VGNet
 import pandas as pd
-import matplotlib.pyplot as plt
 from torch.utils.mobile_optimizer import optimize_for_mobile
 
 NUM_CLASSES = 43
 IMG_HEIGHT = 32
 IMG_WIDTH = 32
 NUM_EPOCHS = 20
+
+CUDA=torch.cuda.is_available()
+device = torch.device("cuda:0" if CUDA else "cpu")
+print(device)
 
 def preProcessData2(directory_path, data_type="train"):
     trainset_X = []
@@ -112,7 +115,7 @@ def test(net, test_dataloader):
     return test_accuracy
 
 def learn(train_dataloader, test_dataloader, learning_rate=0.001, momentum=0.9, dropout=0.75):
-    net = VGNet(NUM_CLASSES, dropout)
+    net = LeNet(NUM_CLASSES, dropout)
     net = net.to(device)
     optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=momentum)
     accuracy_list = []
@@ -126,106 +129,18 @@ def learn(train_dataloader, test_dataloader, learning_rate=0.001, momentum=0.9, 
 
     return net, accuracy_list
 
-def plotAccuracies(accuracies, labels):
-    accuracies = np.array(accuracies).reshape(len(labels), -1)
 
-    plt.xlabel('Epoch number')
-    plt.ylabel('Accuracy (%)')
-    plt.ylim(0,100)
-
-    for i in range(len(labels)):
-        plt.plot(np.arange(1,NUM_EPOCHS+1), accuracies[i], label=labels[i])
-    
-    plt.legend()
-    #plt.savefig(f'plots/GTSRB/{plt.gca().get_title()}')
-    plt.clf()
-
-def runExperiments():
-    #Hyper params
-    batch_sizes = [16, 32, 64]
-    learning_rates = [0.0001, 0.001, 0.01, 0.1]
-    momentums = [0.5, 0.75, 0.9, 1]
-    dropouts = [0, 0.1, 0.25, 0.5, 0.75]
-    
-    # Test batch sizes
-    print("\nTesting batch sizes...")
-    accuracies = []
-    labels = []
-    for _, value in enumerate(batch_sizes):
-        print(f'Batch-size: {value}')
-        train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=value, shuffle=True)
-        test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
-        _, acc = learn(train_dataloader, test_dataloader)
-        accuracies+= acc
-        labels.append(f'Batch size: {value}')
-
-    plt.title('GTSRB Batch Sizes')
-    plotAccuracies(accuracies, labels)
-
-    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True)
-    test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
-
-    # Test learning rates
-    print("\nTesting learning rates...")
-    accuracies = []
-    labels = []
-    for _, value in enumerate(learning_rates):
-        print(f'LR: {value}')
-        _, acc = learn(train_dataloader, test_dataloader, learning_rate=value)
-        accuracies+= acc
-        labels.append(f'LR: {value}')
-
-    plt.title('GTSRB Learning Rates')
-    plotAccuracies(accuracies, labels)
-
-    # Test momentums
-    print("\nTesting momentum...")
-    accuracies = []
-    labels = []
-    for _, value in enumerate(momentums):
-        print(f'Momentum: {value}')
-        _, acc = learn(train_dataloader, test_dataloader, momentum=value)
-        accuracies+= acc
-        labels.append(f'Momentum: {value}')
-
-    plt.title('GTSRB Momentum')
-    plotAccuracies(accuracies, labels)
-
-    # Test dropouts
-    print("\nTesting dropouts...")
-    accuracies = []
-    labels = []
-    for _, value in enumerate(dropouts):
-        print(f'Dropout: {value}')
-        _, acc = learn(train_dataloader, test_dataloader, dropout=value)
-        accuracies+= acc
-        labels.append(f'Dropout: {value}')
-
-    plt.title('GTSRB Dropout')
-    plotAccuracies(accuracies, labels)
-
-def runExperiments2():
-    #Hyper params
-    learning_rates = [0.0001, 0.001]
-    momentums = [0.5, 0.75, 0.9]
-    dropouts = [0.1, 0.25, 0.5, 0.75] 
-
-    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=4, shuffle=True)
-    test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
-
-    for _, lr in enumerate(learning_rates):
-        for _, m in enumerate(momentums):
-            for _, d in enumerate(dropouts):
-                print(f'\nLR: {lr}, M: {m}, D: {d}')
-                learn(train_dataloader, test_dataloader, learning_rate=lr, momentum=m, dropout=d)
-
-def createModel(batch_size, learning_rate, momentum, dropout):
+def createModel(batch_size, learning_rate, momentum, dropout, save=False):
     print("Creating model...")
+    train_dataset, test_dataset = loadData()
     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=64)
     model, _ = learn(train_dataloader, test_dataloader, learning_rate=learning_rate, momentum=momentum, dropout=dropout)
-    model = model.cpu()
-    #torch.save(model.state_dict(), "models/model_scripted.pt")
+    
+    if save:
+        model = model.cpu()
+        torch.save(model.state_dict(), "models/model_scripted.pt")
+        optimizeModel()
 
 def optimizeModel():
     model = VGNet(NUM_CLASSES)
@@ -234,7 +149,7 @@ def optimizeModel():
     example = torch.rand(1, 3, IMG_WIDTH, IMG_HEIGHT)
     traced_script_module = torch.jit.trace(model, example)
     optimized_traced_model = optimize_for_mobile(traced_script_module)
-    #optimized_traced_model._save_for_lite_interpreter("model.pt")
+    optimized_traced_model._save_for_lite_interpreter("model.pt")
 
 def loadData(train_path='data/gtsrb/train.pth', test_path='data/gtsrb/test.pth'):
     print("Loading data...")
@@ -245,15 +160,13 @@ def loadData(train_path='data/gtsrb/train.pth', test_path='data/gtsrb/test.pth')
         train_dataset, test_dataset = preProcessData()
         torch.save(train_dataset, train_path)
         torch.save(test_dataset, test_path)
+
     return train_dataset, test_dataset
 
-CUDA=torch.cuda.is_available()
-device = torch.device("cuda:0" if CUDA else "cpu")
-print(device)
+def main():
+    createModel(batch_size=4, learning_rate=0.01, momentum=0.9, dropout=0.75)    
+    pass
 
-train_dataset, test_dataset = loadData()
+if __name__ == "__main__":
+    main()
 
-#print("Running experiments...")
-#runExperiments()
-#createModel(batch_size=4, learning_rate=0.001, momentum=0.9, dropout=0.75)
-#optimizeModel()

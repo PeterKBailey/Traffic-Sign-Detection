@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LeNet(nn.Module):
-    def __init__(self, num_classes=43):
+    def __init__(self, num_classes=43, dropout=0):
         super(LeNet, self).__init__()
         self.pool = nn.AvgPool2d(kernel_size=2, stride=2) 
 
@@ -14,7 +14,7 @@ class LeNet(nn.Module):
         self.fc1 = nn.Linear(400, 120)
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, num_classes)
-        self.dropout = nn.Dropout(0.25)
+        self.dropout = nn.Dropout(dropout)
 
 
     def forward(self, x):
