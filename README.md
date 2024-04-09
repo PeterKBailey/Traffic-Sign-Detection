@@ -6,7 +6,7 @@ Traffic sign recognition and localization.
 
 ## Overview
 There are a few key components to the project
-1. Our custom AlexNet traffic sign categorization neural network
+1. Our custom LeNet and VGGnet traffic sign categorization neural networks
 2. The YOLOv5 training neural network
 3. The Flutter mobile app
 
@@ -15,6 +15,8 @@ There are a few key components to the project
 ## GTSRB Classification Sample Script
 
 ## Android Application
+The android app allows for detection and classification in real time while also providing the ability to take snapshots and view them.
+
 Requires either
 - A) An Android phone which can install [the app APK](https://drive.google.com/file/d/1MHEOfz43j-FumzRXSGm3AV8wUzSVJSUp/view?usp=sharing)
   1. Download the APK
@@ -43,56 +45,8 @@ There are a few pieces to the app
 
 ![alt text](Readme-Images/image-2.png) ![alt text](Readme-Images/image-3.png) ![alt text](Readme-Images/image-4.png)
 
-# Everything Below is Training/Building From Scratch
-
-## Training YOLOv5
-1. download the mapillary training and validation datasets from https://www.mapillary.com/dataset/trafficsign  
-![alt text](image.png)
-2. Unzip the files and create the following directory structure:  
-```main_directory/  
-│  
-├── train/  
-│   ├── images/  
-│       └── [series_of_jpgs]  
-│  
-├── validate/  
-│   ├── images/  
-│       └── [series_of_jpgs]  
-│  
-└── mtsd_v2_fully_annotated/  
-    ├── annotations/  
-    │   └── [series_of_jsons]  
-    └── splits/  
-        ├── train.txt  
-        ├── test.txt  
-        └── val.txt  
-```
-3. Using the following command to get the data in a structure for YOLO training  
-`python /path/to/preprocessing.py initialize --input-location /location/of/data/created/in/step_2 --output-location /where/to/store/processed/data/for/YOLOv5`
-
-4. Now install yolo in `/where/to/store/processed/data/for/YOLOv5/"data"` (note that there is a data directory now)  
-```
-git clone https://github.com/ultralytics/yolov5  # clone
-cd yolov5
-pip install -r requirements.txt  # install
-```
-
-6. Now from within the same directory (`/where/to/store/processed/data/for/YOLOv5/"data"`) run YOLOv5 with  
-From within your --output-location run the following command  
-`python yolov5/train.py --img 640 --batch 16 --epochs 3 --data dataset.yaml --weights '' --cfg yolov5n.yaml`
-
-Note that the yaml file can be 5n, 5s, 5m and so on.
-
-7. Now generate the torchscript file  
-`python yolov5/export.py --weights yolov5/runs/train/expXYZ/weights/best.pt --include torchscript --img 640 --optimize`
-
-## Training GTSRB
-
-TODO THE READMEN PORTION
 
 ## Building Android App
-The android app allows for detection and classification in real time while also providing the ability to take snapshots and view them.
-
 ### Requirements
 - Android studio
 - An Android phone with developer settings and USB debugging enabled
